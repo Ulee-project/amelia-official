@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
         name: 'roleinfo',
-        category: "Utility",
+        category: "Information",
         alias: ["rinfo"],
         description: "shows stats of the mentioned role",
         usage: "roleinfo <role name | role mention | ID>",
@@ -17,7 +17,7 @@ module.exports = {
         }
 
         let roleembed = new MessageEmbed()
-            .setColor("#00BFFF")
+            .setColor("#FFD700")
             .setAuthor("Role Info")
             .setThumbnail(message.guild.iconURL())
             .addField("**ID**", `\`${role.id}\``, true)

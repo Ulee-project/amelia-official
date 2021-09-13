@@ -13,7 +13,7 @@ app.get("/", (request, response) => {
 app.listen(process.env.PORT);
 
 const axios = require("axios")
-const urls = ["https://sakai-wolford.glitch.me"]
+const urls = ["https://amelia-official.glitch.me"]
 setInterval(function() {
             urls.forEach(url => {
             axios.get(url).then(console.log("Pong at " + Date.now())).catch(() => {});
@@ -37,7 +37,7 @@ fs.readdir("./events/", (_err, files) => {
     if (!file.endsWith(".js")) return;
     const event = require(`./events/${file}`);
     let eventName = file.split(".")[0];
-    console.log(`(🌴) Event loaded : ${eventName} !`);
+    console.log(`(✅) Event loaded : ${eventName} !`);
     client.on(eventName, event.bind(null, client));
     delete require.cache[require.resolve(`./events/${file}`)];
   });

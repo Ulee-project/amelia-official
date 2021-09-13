@@ -8,20 +8,20 @@ const Statustext = {
 };
 
 module.exports = {
-  name:"neko",
-  alias:["neko"],
+  name:"waifu",
+  alias:["waifu"],
   category:"Fun",
-  description:"Get Fresh Neko Images",
-  usage:"neko",
+  description:"Get Fresh Waifu Images",
+  usage:"waifu",
   run: async(client, message, args) => {
-    const data = await fetch("https://nekos.life/api/v2/img/neko").then((res) =>
+    const data = await fetch("https://nekos.life/api/v2/img/waifu").then((res) =>
       res.json()
     );
 
     const embed = new MessageEmbed()
       .setFooter(`Powered by nekos.life`)
       .setColor("#FFD700")
-      .setDescription(`${statusAnimation.Rainbow_Weeb}**NEKO**`)
+      .setDescription(`${statusAnimation.Rainbow_Weeb}**Waifu**`)
       .setImage(`${data.url}`)
 
 

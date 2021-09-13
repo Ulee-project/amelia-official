@@ -17,7 +17,7 @@ module.exports = {
   alias:["sinfo"],
   description: "View server information",
   usage: "serverinfo",
-  category: "Utility",
+  category: "Information",
     run: async (client, message, args) => {
         let region;
         switch (message.guild.region) {
@@ -40,7 +40,7 @@ module.exports = {
 
         const embed = new MessageEmbed()
             .setThumbnail(message.guild.iconURL({dynamic : true}))
-            .setColor('#00BFFF')
+            .setColor('#FFD700')
             .setAuthor(`${message.guild.name} server stats`,message.guild.iconURL({ dynamic: true }))
             .addFields(
                 {

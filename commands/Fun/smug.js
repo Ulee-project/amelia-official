@@ -17,7 +17,7 @@ module.exports = {
     
     const embed = new MessageEmbed()
       .setFooter(`Powered by nekos.life`)
-      .setColor("#00BFFF")
+      .setColor("#FFD700")
       .setDescription(`${message.author} Smug **${smug}**`)
       .setImage(`${data.url}`)
 

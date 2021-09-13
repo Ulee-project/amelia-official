@@ -15,7 +15,7 @@ module.exports = {
     const tickle = message.author.id === user.id ? "themselfs" : user.username;
 
     const embed = new MessageEmbed()
-      .setColor("#00BFFF")
+      .setColor("#FFD700")
       .setDescription(`${message.author} Tickled **${tickle}**`)
       .setImage(`${data.url}`)
       .setFooter(`Powered by nekos.life`)

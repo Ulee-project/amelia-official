@@ -10,31 +10,56 @@ module.exports = {
   run: async (client, message, args) => {
     
     if(!message.member.hasPermission("ADMINISTRATOR")) {
-      return message.channel.send("**❌You should have admin perms to use this command!**")
+      return message.channel.send({
+        embed : {
+          color : `RED`,
+          description : "❌You should have admin perms to use this command!"
+        }
+      })
     }
     
     const user = message.mentions.members.first()
     
     if(!user) {
-      return message.channel.send("**❌Please Mention the person to who you want to warn - warn @mention <reason>**")
+      return message.channel.send({
+        embed : {
+          description : `❌Please Mention the person to who you want to warn - warn @mention <reason>`
+        }
+      })
     }
     
     if(message.mentions.users.first().bot) {
-      return message.channel.send("**❌You can not warn bots**")
+      return message.channel.send({
+        embed : {
+          description :`❌You can not warn bots`
+        }
+      })
     }
     
     if(message.author.id === user.id) {
-      return message.channel.send("**❌You can not warn yourself**")
+      return message.channel.send({
+        embed : {
+          description : `❌You can not warn yourself`
+        }
+      })
     }
     
     if(user.id === message.guild.owner.id) {
-      return message.channel.send("**❌You jerk, how you can warn server owner -_-**")
+      return message.channel.send({
+        embed : {
+          description : `❌You jerk, how you can warn server owner -_-`
+        }
+      })
     }
     
     const reason = args.slice(1).join(" ")
     
     if(!reason) {
-      return message.channel.send("**❌Please provide reason to warn - warn @mention <reason>**")
+      return message.channel.send({
+        embed : {
+          description : `❌Please provide reason to warn - warn @mention <reason>`
+        }
+      })
     }
     
     let warnings = db.get(`warnings_${message.guild.id}_${user.id}`)

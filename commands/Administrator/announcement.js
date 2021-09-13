@@ -8,16 +8,21 @@ module.exports = {
   usage: "announcement <channel> <text>",
   category: "Administrator",
   run:async(client, message, args) => {
-    message.delete();
     if (!args[0]) {
-      return message.channel.send(
-        "**❌Please provide text or a valid channel!\n You can also set a default channel using `set announce-channel <channel mention>`**"
+      return message.channel.send({
+        embed : {
+          description : `❌Please provide text or a valid channel!`
+        }
+      }
       );
     }
 
     if (!message.member.hasPermission("MANAGE_MESSAGES"))
-      return message.channel.send(
-        "*❌You don't have the correct permissions for that!**"
+      return message.channel.send({
+        embed : {
+          color : `RED`,
+          description : "❌You Don't Have `MANAGE_MESSAGES` Permissions For That!"        }
+      }
       );
 
     const announceChannel = await getAnnounceChannel(message.guild.id);
@@ -30,7 +35,11 @@ module.exports = {
       channel = announceChannel;
       text = args.join(" ");
     } else {
-      return message.channel.send("**❌Please provide text or a valid channel**");
+      return message.channel.send({
+        embed : {
+          description : `❌Please provide text or a valid channel`
+        }
+      });
     }
 
     const embed = new MessageEmbed()

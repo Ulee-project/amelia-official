@@ -13,20 +13,29 @@ module.exports =  {
   run: async (client, message, args) => {
     //checking args
    if (!args[0]) {
-     return message.channel.send("**❌Please Give us the name of anime**");
+     return message.channel.send({
+       embed : {
+         description : `❌Please Give us the name of anime`
+       }
+     });
       
     }
     //main part
         var search = message.content.split(/\s+/g).slice(1).join(" ");
         kitsu.searchAnime(search).then(async result => {
             if (result.length === 0) {
-                return message.channel.send(`**❌No results found for** \`${search}!\``);
+                return message.channel.send({
+                  embed : {
+                    color : `RED`,
+                    description : `❌No results found for \`${search}!\``
+                  }
+                });
             }
           
           var anime = result[0]
 
             let embed = new Discord.MessageEmbed()
-                .setColor('#00BFFF')
+                .setColor('#FFD700')
                 .setAuthor(`${anime.titles.english ? anime.titles.english : search} | ${anime.showType}`, anime.posterImage.original)
                 .setDescription(anime.synopsis.replace(/<[^>]*>/g, '').split('\n')[0])
                 .addField('**❯\u2000\Information**', `•\u2000\**Japanese Name:** ${anime.titles.romaji}\n\•\u2000\**Age Rating:** ${anime.ageRating}\n\•\u2000\**NSFW:** ${anime.nsfw ? 'Yes' : 'No'}`, true)

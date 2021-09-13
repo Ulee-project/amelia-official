@@ -9,12 +9,30 @@ module.exports = {
         usage: "unmute <@mention | user ID> <reason>",
         category: "Administrator",
     run: async (bot, message, args) => {
-        if (!message.member.hasPermission("MANAGE_GUILD")) return message.channel.send("**❌You Dont Have The Permissions To Unmute Someone!**");
+        if (!message.member.hasPermission("MANAGE_SERVER")) return message.channel.send({
+          embed : {
+            color : `RED`,
+            description : "❌You Don't Have `MANAGE_SERVER` Permissions To Unmute Someone!"
+          }
+        });
 
-        if (!message.guild.me.hasPermission("MANAGE_GUILD")) return message.channel.send("**❌I Don't Have Permissions To Unmute Someone!**")
-        if (!args[0]) return message.channel.send("**❌Please Enter A User!**")
+        if (!message.guild.me.hasPermission("MANAGE_SERVER")) return message.channel.send({
+          embed : {
+            color : `RED`,
+            description : "❌You Don't Have `MANAGE_SERVER` Permissions To Unmute Someone!"
+          }
+        })
+        if (!args[0]) return message.channel.send({
+          embed : {
+            description : `❌Please Enter A User!`
+          }
+        })
         let mutee = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(ro => ro.displayName.toLowerCase() === args[0].toLocaleLowerCase());
-        if (!mutee) return message.channel.send("**❌Please Enter A Valid User!**");
+        if (!mutee) return message.channel.send({
+          embed : {
+            description :`❌Please Enter A Valid User!`
+          }
+        });
 
         let reason = args.slice(1).join(" ");
 
@@ -31,11 +49,26 @@ module.exports = {
         let rolefetched = db.fetch(`muteeid_${message.guild.id}_${mutee.id}`)
         if (!rolefetched) return;
 
-        if (!muterole) return message.channel.send("**❌There Is No Mute Role To Remove!**")
-        if (!mutee.roles.cache.has(muterole.id)) return message.channel.send("**❌User is not Muted!**")
+        if (!muterole) return message.channel.send({
+          embed : {
+            description : `❌There Is No Mute Role To Remove!`
+          }
+        })
+        if (!mutee.roles.cache.has(muterole.id)) return message.channel.send({
+          embed :{
+            description : `❌User is not Muted!`
+          }
+        })
         try {
         mutee.roles.remove(muterole.id).then(() => {
-            mutee.send(`**Hello, You Have Been Unmuted In ${message.guild.name} for ${reason || "No Reason"}**`).catch(() => null)
+            mutee.send({
+                  embed : {
+                    color : 'RED',
+                 description : `👋Hello, You Have Been Unmute🔊 In ${message.guild.name}
+                 Reason: \`${reason || "No Reason"}\``
+                  }
+                })
+              .catch(() => null)
             let roleadds = rolefetched
             if (!roleadds) return;
             mutee.roles.add(roleadds)
@@ -47,7 +80,7 @@ module.exports = {
           }
             const sembed = new MessageEmbed()
                 .setColor("RED")
-                .setAuthor(message.guild.name, message.guild.iconURL())
+                .setAuthor(mutee.user.tag, mutee.user.displayAvatarURL())
                 .setDescription(`${mutee.user.username} was successfully unmuted.`)
             message.channel.send(sembed);
         
@@ -56,13 +89,12 @@ module.exports = {
         if (!channel) return;
 
         let embed = new MessageEmbed()
-            .setColor(redlight)
-            .setThumbnail(mutee.user.displayAvatarURL({ dynamic: true }))
-            .setAuthor(`Member Unmute`, message.guild.iconURL())
-            .setDescription(`**${mutee.user.username}** ${mutee.id}`)
-            .addField("**Reason**", `${reason || "**No Reason**"}`)
-            .setFooter(message.member.displayName, message.author.displayAvatarURL())
-            .setTimestamp()
+            .setColor('RED')
+                .setAuthor(`Member Unmute ${mutee.user.tag}`, mutee.user.displayAvatarURL())
+                .setDescription(`**${mutee.user.username}** was been Unmuted
+                Reason: \`${reason || "No Reason"}\``)
+                .setFooter(message.member.displayName, message.author.displayAvatarURL())
+                .setTimestamp()
       
         var sChannel = message.guild.channels.cache.get(channel)
         if (!sChannel) return;

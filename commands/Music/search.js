@@ -10,18 +10,30 @@ module.exports = {
   usage:"search <name song>",
   run: async(client, message, args) => {
     if (!args.length)
-      return message.reply(`Usage: ${module.exports.name} <Video Name>`).catch(console.error);
+      return message.channel.send({
+        embed : {
+          description : `${message.author} Usage: ${client.prefix}${module.exports.usage}`
+        }
+      }).catch(console.error);
     if (message.channel.activeCollector)
-      return message.reply("**❌A message collector is already active in this channel.**");
+      return message.channel.send({
+        embed : {
+          description : `${message.author} ❌A message collector is already active in this channel.`
+        }
+      }).then(msg => msg.delete({ timeout: 5000 })).catch(() => null);
     if (!message.member.voice.channel)
-      return message.reply("**❌You need to join a voice channel first!**").catch(console.error);
+      return message.channel.send({
+        embed : {
+          description : `${message.author} ❌You must join the voice channel first before using the command!`
+        }
+      }).catch(console.error);
 
     const search = args.join(" ");
 
     let resultsEmbed = new MessageEmbed()
       .setTitle(`**Reply with the song number you want to play**`)
       .setDescription(`Results for: ${search}`)
-      .setColor("RANDOM");
+      .setColor(`#FFD700`);
 
     try {
       let videos = []

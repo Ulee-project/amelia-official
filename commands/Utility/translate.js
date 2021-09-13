@@ -12,18 +12,27 @@ module.exports = {
     let text = args.slice(1).join(" ");
 
     if (!language)
-      return message.reply("**❌What language am I supposed to translate to?**");
+      return message.reply({
+        embed : {
+          description : `❌What language am I supposed to translate to?`
+        }
+      });
     if (language.length !== 2)
-      return message.reply(
-        "**❌Language must be the 2 letter alias. E.g `English` -> `en`**"
-      );
-    if (!text) return message.reply("**❌What am I supposed to translate?**");
+      return message.reply({
+embed : {
+  description : "❌Language must be the 2 letter alias. E.g `English` -> `en`"
+}});
+    if (!text) return message.reply({
+      embed : {
+        description : `❌What am I supposed to translate?`
+      }
+    });
 
     const result = await translate(text, { to: language });
 
     const embed = new MessageEmbed()
       .setDescription(result.text)
-      .setColor('#00BFFF')
+      .setColor('#FFD700')
       .setFooter(`Translate provided by Google.`)
       .setAuthor("Google Translate", message.author.displayAvatarURL());
 

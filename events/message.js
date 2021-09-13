@@ -7,10 +7,10 @@ module.exports = async (client, msg) => {
   let prefix;
     if (msg.channel.type == "text") {
       let gprefix = await client.db.fetch(`prefix_${msg.guild.id}`);
-      if (gprefix === null) gprefix = "s!";
+      if (gprefix === null) gprefix = "a!";
       prefix = gprefix;
     } else {
-      prefix = `s!`;
+      prefix = `a!`;
     }
 
    client.prefix = prefix;
@@ -20,28 +20,36 @@ module.exports = async (client, msg) => {
     if (msg.content.match(prefixMention)) {
     msg.channel.send({
       embed: {
-        description: `**:wave:My prefix on this guild is** \`${client.prefix}\``,
-        color: `#00BFFF`
+        author : {
+          name : `${client.user.username} Prefix`,
+          icon_url : `${client.user.displayAvatarURL({ dynamic: true })}`
+        },
+        footer : {
+          text : `Copyright © ${client.user.username}. All Rights Reserved.`
+        },
+        description: `_Hey! ${msg.author}_
+
+\`-\` _My prefix in this guild is \`${client.prefix}\`_
+\`-\` _Server ID \`${msg.guild.id}\`_
+\`-\` _Type \`${client.prefix}help\` for the list of commands._`,
+        color: `#FFD700`
       }
     });
   }
   
   if (msg.content == `<@${client.user.id}>`) {
     const embed = new Discord.MessageEmbed()
-      .setDescription(`**:wave: | My prefix is** \`${client.prefix}\``)
-      .setColor("#00BFFF")
-      .setFooter(`© ${client.user.usernme}`);
-    msg.channel.send(embed);
+      .setDescription(`:wave: | My prefix is \`${client.prefix}\``)
+      .setColor(`#FFD700`)
+    msg.channel.send(embed).then(msg => msg.delete({ timeout: 5000 })).catch(() => null);
   }
   if (msg.content == client.prefix) {
     const embed = new Discord.MessageEmbed()
       .setDescription(
-        `**Hey, It's me!
-You can type** \`${client.prefix}help\` **to get bot commands list**`
+        `${msg.author} _That's my prefix._`
       )
-      .setColor("#00BFFF")
-      .setFooter(`© ${client.user.username}`);
-    return msg.channel.send(embed);
+      .setColor(`#FFD700`)
+    return msg.channel.send(embed).then(msg => msg.delete({ timeout: 10000 })).catch(() => null);
   }
 
   let args = msg.content
@@ -51,20 +59,29 @@ You can type** \`${client.prefix}help\` **to get bot commands list**`
   let cmd = args.shift().toLowerCase();
   if (!msg.content.startsWith(client.prefix)) return;
 
+  //wrong commands
   try {
     const file = client.commands.get(cmd) || client.aliases.get(cmd);
-    if (!file) return msg.reply("**❌Command that you want doesn't exist.**");
-
+    if (!file) return msg.channel.send({
+    embed : {
+      description : 
+    `${msg.author} ❌Sorry, the command you want does not exist.`
+    }
+    }).then(msg => msg.delete({ timeout: 5000 })).catch(() => null);
+   
+  //cooldown commands 
     const now = Date.now();
     if (client.db.has(`cooldown_${msg.author.id}`)) {
       const expirationTime = client.db.get(`cooldown_${msg.author.id}`) + 3000;
       if (now < expirationTime) {
         const timeLeft = (expirationTime - now) / 1000;
-        return msg.reply(
-          `**please wait ${timeLeft.toFixed(
+        return msg.channel.send({
+          embed : {
+            description : `${msg.author} ❗️ Please wait \`${timeLeft.toFixed(
             1
-          )} more second(s) before reusing the \`${file.name}\` command.**`
-        );
+          )}\` more second(s) before reusing the \`${file.name}\` command.`
+          }
+        }).then(msg => msg.delete({ timeout: 5000 })).catch(() => null);
       }
     }
 
@@ -78,7 +95,7 @@ You can type** \`${client.prefix}help\` **to get bot commands list**`
     console.error(err);
   } finally {
     console.log(
-      `${msg.author.tag} using ${cmd} in ${msg.channel.name} | ${msg.guild.name}`
+      `[${msg.author.tag}] using [${cmd}] in ${msg.channel.name} | ${msg.guild.name}`
     );
   }
 };

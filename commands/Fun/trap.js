@@ -13,8 +13,8 @@ module.exports = {
     );
 
     const embed = new MessageEmbed()
-      .setColor("#00BFFF")
-      .setDescription(`Its a TRAP`)
+      .setColor("#FFD700")
+      .setDescription(`**Its a TRAP**`)
       .setImage(`${data.url}`)
       .setFooter(`Powered by nekos.life`)
     

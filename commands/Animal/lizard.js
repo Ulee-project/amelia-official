@@ -2,19 +2,19 @@ const { MessageEmbed } = require("discord.js");
 const fetch = require("node-fetch");
 
 module.exports = {
-  name:"dog",
-  alias:["doggy"],
-  category:"Fun",
-  description:"Get Fresh dot Images",
-  usage:"dot",
+  name:"lizard",
+  alias:["lizard"],
+  category:"Animal",
+  description:"Get Fresh Lizard Images",
+  usage:"lizard",
   run: async(client, message, args) => {
-    const data = await fetch("https://nekos.life/api/v2/img/woof").then((res) =>
+    const data = await fetch("https://nekos.life/api/v2/img/lizard").then((res) =>
       res.json()
     );
 
     const embed = new MessageEmbed()
-      .setColor("#00BFFF")
-      .setAuthor(`| 🐕Guk Guk Guk~`, message.guild.iconURL({ dynamic: true }))
+      .setColor("#FFD700")
+      .setAuthor(`| 🦎Lizard~`, message.guild.iconURL({ dynamic: true }))
       .setImage(`${data.url}`)
       .setFooter(`Powered by nekos.life`)
 

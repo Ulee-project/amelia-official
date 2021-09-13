@@ -2,7 +2,7 @@ const { play } = require("../../handler/play.js");
 const ytdl = require("ytdl-core");
 const YouTubeAPI = require("simple-youtube-api");
 const youtube = new YouTubeAPI(process.env.YT_KEY);
-
+const convertMS = require("pretty-ms");
 module.exports = {
   name: "play",
   alias: ["p"],
@@ -12,21 +12,40 @@ module.exports = {
   run: async (client, msg, args) => {
     const { channel } = msg.member.voice;
     if (!args.length)
-      return msg.reply(
-        `**❌No argument submitted. Try ${client.prefix}${module.exports.usage}**`
-      );
+      return msg.channel.send({
+        embed : {
+          color : `RED`,
+          description : `${msg.author} ❌No argument submitted. Try ${client.prefix}${module.exports.usage}`
+        }
+      });
     if (!channel)
       return msg
-        .reply("**❌You need to join a voice channel first!**")
+        .channel.send({
+        embed : {
+          description : `${msg.author} ❌You must join the voice channel first before using the command!`
+        }
+      })
         .catch(console.error);
 
     const permissions = channel.permissionsFor(client.user);
+    /*if (!permissions.has("VIEW CHANNEL"))
+      return msg.channel.send({
+        embed : {
+          description : `${msg.author} ❌I don't have permission to **view** on voice channel!`
+        }
+      });*/
     if (!permissions.has("CONNECT"))
-      return msg.reply("**❌Cannot connect to voice channel, missing permissions**");
+      return msg.channel.send({
+        embed : {
+          description : `${msg.author} ❌I don't have permission to **connect** your voice channel!`
+        }
+      });
     if (!permissions.has("SPEAK"))
-      return msg.reply(
-        "**❌I cannot speak in this voice channel, make sure I have the proper permissions!**"
-      );
+      return msg.channel.send({
+        embed : {
+          description : `${msg.author} ❌I don't have permission to **speak** on voice channel!`
+        }
+      });
 
     const search = args.join(" ");
     const videoPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/gi;
@@ -56,10 +75,13 @@ module.exports = {
     if (urlValid) {
       try {
         songInfo = await ytdl.getInfo(url);
+        const convertduration = convertMS(songInfo.videoDetails.lengthSeconds * 1000, { colonNotation: true });
         song = {
           title: songInfo.videoDetails.title,
           channel: songInfo.videoDetails.author.name,
           url: songInfo.videoDetails.video_url,
+          thumbnail: songInfo.videoDetails.thumbnails[0].url,
+          duration: convertduration,
           playUser: msg.author.id,
           vote: []
         };
@@ -70,18 +92,25 @@ module.exports = {
       try {
         const results = await youtube.searchVideos(search, 1);
         songInfo = await ytdl.getInfo(results[0].url);
+        const convertduration = convertMS(songInfo.videoDetails.lengthSeconds * 1000, { colonNotation: true });
         song = {
           title: songInfo.videoDetails.title,
           channel: songInfo.videoDetails.author.name,
           url: songInfo.videoDetails.video_url,
-          thumbnail: songInfo.videoDetails.thumbnail.thumbnails[0].url,
+          thumbnail: songInfo.videoDetails.thumbnails[0].url,
+          duration: convertduration,
           playUser: msg.author.id,
           vote: []
         };
       } catch (error) {
         console.error(error);
         return msg
-          .reply("**❌No video was found with a matching title**")
+          .channel.send({
+          embed : {
+            color : `RED`,
+            description : `❌No matches found!`
+          }
+        })
           .catch(console.error);
       }
     }
@@ -89,17 +118,27 @@ module.exports = {
     if (serverQueue) {
       //return if member voice not same as bot
       if (channel.id !== serverQueue.channel.id)
-        return msg.reply("**❌You need join same voice channel with me!**");
+        return msg.channel.send({
+          embed : {
+            description : `${msg.author} ❌You need join same voice channel with me!`
+          }
+        });
       serverQueue.songs.push(song);
       return serverQueue.textChannel
         .send({
           embed: {
-            color: 0x7289da,
-            title: "Add to Queue",
-            description: `**[${song.title}](${song.url}) Requested by: <@${song.playUser}>**`,
+            color: `#FFD700`,
+            author: {
+              icon_url : "https://cdn.discordapp.com/attachments/706347774572232755/791862138410500116/767228110974091274.gif",
+              name : "Add to Queue ♪",
+            },
+            description: `[${song.title}](${song.url}) - \`[${song.duration}]\`\n<@${song.playUser}>`,
+            footer:{
+              text: `Source ♪ - ${song.channel}`
+            },
+            timestamp: new Date(),
             thumbnail: {
               url: song.thumbnail,
-              timestamp: new Date()
             }
           }
         })

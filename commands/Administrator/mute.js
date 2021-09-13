@@ -10,19 +10,49 @@ module.exports = {
         category: "Administrator",
     run: async (bot, message, args) => {
         try {
-            if (!message.member.hasPermission("MANAGE_SERVER")) return message.channel.send("**❌You Dont Have Permmissions To Mute Someone!** - `MANAGE_GUILD`");
+            if (!message.member.hasPermission("MANAGE_SERVER")) return message.channel.send({
+              embed :{
+                color : `RED`,
+                description : "❌You Don't Have `MANAGE_SERVER` Permmissions To Mute Someone!"
+              }
+            });
 
-            if (!message.guild.me.hasPermission("MANAGE_SERVER")) return message.channel.send("**❌I Don't Have Permissions To Mute Someone!** - `MANAGE_GUILD`")
-            if (!args[0]) return message.channel.send("**❌Please Enter A User To Be Muted!**");
+            if (!message.guild.me.hasPermission("MANAGE_SERVER")) return message.channel.send({
+              embed : {
+                color : `RED`,
+                description : "❌I Don't Have `MANAGE_SERVER` Permissions To Mute Someone!"
+              }
+            })
+            if (!args[0]) return message.channel.send({
+              embed : {
+                description : `❌Please Enter A User To Be Muted!`
+              }
+            });
 
             var mutee = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(ro => ro.displayName.toLowerCase() === args[0].toLocaleLowerCase());
-            if (!mutee) return message.channel.send("**❌Please Enter A Valid User To Be Muted!**");
+            if (!mutee) return message.channel.send({
+              embed : {
+                description : `❌Please Enter A Valid User To Be Muted!`
+              }
+            });
 
-            if (mutee === message.member) return message.channel.send("**❌You Cannot Mute Yourself!**")
-            if (mutee.roles.highest.comparePositionTo(message.guild.me.roles.highest) >= 0) return message.channel.send('**❌Cannot Mute This User!**')
+            if (mutee === message.member) return message.channel.send({
+              embed :{
+                description : `❌You Cannot Mute Yourself!`
+              }
+            })
+            if (mutee.roles.highest.comparePositionTo(message.guild.me.roles.highest) >= 0) return message.channel.send({
+              embed : {
+                description :`❌Cannot Mute This User!`
+              }
+            })
 
             let reason = args.slice(1).join(" ");
-            if (mutee.user.bot) return message.channel.send("**❌Cannot Mute Bots!**");
+            if (mutee.user.bot) return message.channel.send({
+              embed : {
+                description : `❌Cannot Mute Bots!`
+              }
+            });
             const userRoles = mutee.roles.cache
                 .filter(r => r.id !== message.guild.id)
                 .map(r => r.id)
@@ -59,12 +89,23 @@ module.exports = {
                 }
             };
 
-            if (mutee.roles.cache.has(muterole.id)) return message.channel.send("**User Is Already Muted!**")
+            if (mutee.roles.cache.has(muterole.id)) return message.channel.send({
+              embed : {
+                description : `User Is Already Muted!`
+              }
+            })
 
             db.set(`muteeid_${message.guild.id}_${mutee.id}`, userRoles)
           try {
             mutee.roles.set([muterole.id]).then(() => {
-                mutee.send(`**Hello, You Have Been Muted In ${message.guild.name} for - ${reason || "No Reason"}`).catch(() => null)
+                mutee.send({
+                  embed : {
+                    color : 'RED',
+                 description : `👋Hello, You Have Been Muted🔇 In ${message.guild.name}
+                 Reason: \`${reason || "No Reason"}\``
+                  }
+                })
+                  .catch(() => null)
             })
             } catch {
                  mutee.roles.set([muterole.id])                               
@@ -72,13 +113,13 @@ module.exports = {
                 if (reason) {
                 const sembed = new MessageEmbed()
                     .setColor("RED")
-                    .setAuthor(message.guild.name, message.guild.iconURL())
+                    .setAuthor(mutee.user.tag, mutee.user.displayAvatarURL())
                     .setDescription(`**${mutee.user.username}** was successfully muted for ${reason}`)
                 message.channel.send(sembed);
                 } else {
                     const sembed2 = new MessageEmbed()
                     .setColor("RED")
-                    .setAuthor(message.guild.name, message.guild.iconURL())
+                    .setAuthor(mutee.user.tag, mutee.user.displayAvatarURL())
                     .setDescription(`**${mutee.user.username}** was successfully muted`)
                 message.channel.send(sembed2);
                 }
@@ -87,11 +128,10 @@ module.exports = {
             if (!channel) return;
 
             let embed = new MessageEmbed()
-                .setColor(redlight)
-                .setThumbnail(mutee.user.displayAvatarURL({ dynamic: true }))
-                .setAuthor(`Member Mute`, message.guild.iconURL())
-                .setDescription(`**${mutee.user.username}** ${mutee.id}`)
-                .addField("**Reason**", `${reason || "**No Reason**"}`)
+                .setColor('RED')
+                .setAuthor(`Member Mute ${mutee.user.tag}`, mutee.user.displayAvatarURL())
+                .setDescription(`**${mutee.user.username}** was been Mute
+                Reason: \`${reason || "No Reason"}\``)
                 .setFooter(message.member.displayName, message.author.displayAvatarURL())
                 .setTimestamp()
 

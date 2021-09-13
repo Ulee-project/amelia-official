@@ -21,10 +21,11 @@ module.exports =  {
 
   
   const embed = new Discord.MessageEmbed()
-  .setTitle(`${user.tag} Avatar!`)
-  .setDescription(`**:small_blue_diamond: Avatar URL of ${user.tag}** 
-[click here](${avatar})`)
-  .setColor(`#00BFFF`)
+  .setAuthor(`Avatar for ${user.tag}`)
+  .setDescription(`Nickname : <@${user.id}>
+ID : ${user.id}
+Avatar URL : [Click Here](${avatar})`)
+  .setColor(`#FFD700`)
   .setImage(avatar)
   
   return message.channel.send(embed);

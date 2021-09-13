@@ -5,7 +5,7 @@ module.exports = {
   name: "userinfo",
   description: "Get user info",
   usage: "userinfo <user>",
-  category: "Utility",
+  category: "Information",
   alias: ["user"],
   run: async(client, message, args) =>  {
     const member =
@@ -27,14 +27,14 @@ module.exports = {
     const { username, id, tag } = member.user;
 
     const embed = new MessageEmbed()
-      .addField("**ID**", id, true)
-      .addField("**Username**", username, true)
-      .addField("**Tag**", tag, true)
-      .addField("**Created At**", createdAt, true)
-      .addField("**Joined At**", joinedAt, true)
-      .addField(`**Roles (${roleCount})**`, roles)
-      .setTitle(`${username}'s info`)
-      .setColor(0xFF0000)
+      .addField("🔹ID", id, true)
+      .addField("🔹Username", `<@${id}>`, true)
+      .addField("🔹Tag", tag)
+      .addField("🔹Created At", createdAt, true)
+      .addField("🔹Joined At", joinedAt, true)
+      .addField(`🔹Roles (${roleCount})`, roles)
+      .setAuthor(`${username}'s info`)
+      .setColor("#FFD700")
       .setThumbnail(avatar, { dynamic: true })
       .setTimestamp();
 

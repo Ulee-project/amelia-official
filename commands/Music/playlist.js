@@ -3,6 +3,7 @@ const { play } = require("../../handler/play.js");
 const ytdl = require("ytdl-core");
 const YouTubeAPI = require("simple-youtube-api");
 const youtube = new YouTubeAPI(process.env.YT_KEY);
+const convertMS = require("pretty-ms");
 
 module.exports = {
   name: "playlist",
@@ -15,15 +16,31 @@ module.exports = {
 
     if (!args.length)
       return message
-        .reply(`No argument submitted, Try ${client.prefix}${module.exports.usage}`)
+        .channel.send({
+        embed : {
+          description : `${message.author} ❌No argument submitted, Try ${client.prefix}${module.exports.usage}`
+        }
+      })
         .catch(console.error);
-    if (!channel) return message.reply("**❌You need to join a voice channel first!**").catch(console.error);
+    if (!channel) return message.channel.send({
+      embed :{
+        description : `❌You must join the voice channel first before using the command!`
+      }
+    }).catch(console.error);
 
     const permissions = channel.permissionsFor(message.client.user);
     if (!permissions.has("CONNECT"))
-      return message.reply("**❌Cannot connect to voice channel, missing permissions**");
+      return message.channel.send({
+        embed : {
+          description : `${message.author} ❌I don't have permission to **connect** your voice channel!`
+        }
+      });
     if (!permissions.has("SPEAK"))
-      return message.reply("**❌I cannot speak in this voice channel, make sure I have the proper permissions!**");
+      return message.channel.send({
+        embed : {
+          description : `${message.author} ❌I don't have permission to **speak** on voice channel!`
+        }
+      });
 
     const search = args.join(" ");
     const pattern = /^.*(youtu.be\/|list=)([^#\&\?]*).*/gi;
@@ -64,18 +81,25 @@ module.exports = {
 
     videos.forEach( async (video) => {
       const songInfo = await ytdl.getInfo(`https://www.youtube.com/watch?v=${video.id}`)
+      const convertduration = convertMS(songInfo.videoDetails.lengthSeconds * 1000, { colonNotation: true });
       song = {
           title: songInfo.videoDetails.title,
           channel:songInfo.videoDetails.author.name,
           url:songInfo.videoDetails.video_url,
+          thumbnail: songInfo.videoDetails.thumbnails[0].url,
+          duration: convertduration,
           playUser:message.author.id,
           vote:[]
       };
       if (serverQueue) {
         serverQueue.songs.push(song);
-        if(channel.id !== serverQueue.channel.id) return message.reply("**❌You need join same voice channel with me!**")
+        if(channel.id !== serverQueue.channel.id) return message.channel.send({
+          embed : {
+            description : `${message.author} ❌You need join same voice channel with me!`
+          }
+        })
         message.channel
-            .send(`✅ **${song.title}** has been added to the queue by ${message.author}`)
+            .send(`✅ **${song.title}** has been added to the queue by ${message.author}`).then(msg => msg.delete({ timeout: 10000 })).catch(() => null)
             .catch(console.error);
       } else {
         queueConstruct.songs.push(song);

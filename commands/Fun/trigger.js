@@ -6,7 +6,7 @@ module.exports ={
   alias:["triggered"],
   description:"trigger yourself",
   category:"Fun",
-  usage:"trigger>",
+  usage:"trigger",
   async run(client, message, args) {
     let user = message.mentions.users.first() || client.users.cache.get(args[0]) || message.author;
     let triggered = await canvacord.Canvas.trigger(user.displayAvatarURL({ format: "png", dynamic: false }));

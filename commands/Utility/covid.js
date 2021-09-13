@@ -16,8 +16,8 @@ module.exports = {
 
         const noArgs = new Discord.MessageEmbed()
         .setTitle('Missing arguments')
-        .setColor(0xFF0000)
-        .setDescription(`**You are missing some args (ex: ${client.prefix}covid all / ${client.prefix}covid Indonesia)**`)
+        .setColor(`RED`)
+        .setDescription(`You are missing some args (ex: ${client.prefix}covid all / ${client.prefix}covid Indonesia)`)
         .setTimestamp()
 
         if(!args[0]) return message.channel.send(noArgs);
@@ -35,7 +35,7 @@ module.exports = {
                 .addField('Confirmed Cases', confirmed)
                 .addField('Recovered', recovered)
                 .addField('Deaths', deaths)
-                .setColor('#00BFFF')
+                .setColor('#FFD700')
 
                 message.channel.send(embed)
             })
@@ -52,11 +52,15 @@ module.exports = {
                 .addField('Confirmed Cases', confirmed)
                 .addField('Recovered', recovered)
                 .addField('Deaths', deaths)
-                .setColor('#00BFFF')
+                .setColor('#FFD700')
 
                 message.channel.send(embed)
             }).catch(e => {
-                return message.channel.send('**❌Invalid country provided**')
+                return message.channel.send({
+                  embed : {
+                    description :`❌Invalid country provided`
+                  }
+                }).then(msg => msg.delete({ timeout: 5000 })).catch(() => null);
             })
         }
     }

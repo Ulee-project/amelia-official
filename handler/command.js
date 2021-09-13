@@ -10,10 +10,10 @@ module.exports = client => {
       client.commands.set(command.name, command);
       if (command.alias)
         command.alias.forEach(alias => client.aliases.set(alias, command));
-      console.log(`(🌴) Loaded commands: ${command.name}`);
+      console.log(`(✅) Loaded commands: ${command.name}`);
      }
   };
-  ["Information", "Music", "Fun", "Utility", "Administrator", "Admin"].forEach(x =>
+  ["Information", "Music", "Fun", "Utility","Animal", "Administrator", "Admin"].forEach(x =>
     load(x)
   );
 };

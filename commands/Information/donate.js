@@ -16,7 +16,7 @@ module.exports = {
       .setAuthor(`Donate ${client.user.username}`,client.user.displayAvatarURL({ dynamic:true}))
       .setDescription(`${statusAnimation.Chicken_roll} You can donate by going to the link https://saweria.co/donate/Uleekun`)
       .setFooter(`Donate so that admin can eat :)`)
-      .setColor("#00BFFF")
+      .setColor("#FFD700")
     msg.channel.send(Embed);
   },
 };

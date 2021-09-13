@@ -13,7 +13,7 @@ module.exports = {
     );
 
     const embed = new MessageEmbed()
-      .setColor("#00BFFF")
+      .setColor("#FFD700")
       .setImage(`${data.url}`)
       .setFooter(`Powered by nekos.life`)
 

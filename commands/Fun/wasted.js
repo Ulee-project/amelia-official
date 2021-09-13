@@ -6,7 +6,7 @@ module.exports ={
   alias:["die"],
   description:"wasted yourself",
   category:"Fun",
-  usage:"wasted>",
+  usage:"wasted",
   async run(client, message, args) {
     let user = message.mentions.users.first() || client.users.cache.get(args[0]) || message.author;
     let wasted = await canvacord.Canvas.wasted(user.displayAvatarURL({ format: "png", dynamic: false }));

@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const api = require("imageapi.js");
+const randomPuppy = require("random-puppy");
 const statusAnimation =
 {
 	'meme' : `<:meme:767211992107974656>`
@@ -16,15 +16,16 @@ module.exports = {
   category: "Fun",
   usage:"meme",
   run: async (bot, message, args) => {
-    let subreddits = ["comedyheaven", "dank", "meme", "memes"];
-    let subreddit = subreddits[Math.floor(Math.random() * subreddits.length)];
-    let img = await api(subreddit, true);
-    const Embed = new MessageEmbed()
-      .setTitle(`${statusAnimation.meme} | Meme from reddit/${subreddit}`)
-      .setURL(`https://reddit.com/r/${subreddit}`)
-      .setColor("#00BFFF")
+    const subReddits = ["dankmeme", "meme", "me_irl"];
+        const random = subReddits[Math.floor(Math.random() * subReddits.length)];
+
+        const img = await randomPuppy(random);
+        const embed = new MessageEmbed()
+      .setTitle(`${statusAnimation.meme} | Meme from reddit/${random}`)
+      .setURL(`https://reddit.com/r/${random}`)
+      .setColor("#FFD700")
       .setFooter(`Powered by Reddit`)
       .setImage(img);
-    message.channel.send(Embed);
+    message.channel.send(embed);
   },
 };

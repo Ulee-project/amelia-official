@@ -12,7 +12,7 @@ module.exports = {
         if (n === 1) result = 'Heads';
         else result = 'Tails';
         const embed = new MessageEmbed()
-            .setColor("#00BFFF")
+            .setColor("#FFD700")
             .setDescription(`**${message.member.displayName} Flipped \`${result}\`**!`)
         message.channel.send(embed);
     }

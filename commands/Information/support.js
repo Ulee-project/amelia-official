@@ -22,6 +22,6 @@ module.exports = {
   usage:"support",
   run: async (client, msg, args) => {
     const Embed = new MessageEmbed()
-      msg.channel.send(`${statusAnimation.discord} If you experience problems in **${client.user.username}** bots you can report the problem but must join the server first. **:** https://discord.gg/VzUR95y`);
+      msg.channel.send(`${statusAnimation.discord} If you experience problems in **<@${client.user.id}>** bots you can report the problem but must join the server first. **:** https://discord.gg/VzUR95y`);
   },
 };

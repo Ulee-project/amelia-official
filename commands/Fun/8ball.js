@@ -22,7 +22,7 @@ module.exports = {
       let Embed = new MessageEmbed()
         .setTitle(`8Ball!`)
         .setDescription(`**Your question:** \`${question}\`\n**Reply:** \`${response}\``)
-        .setColor(`#00BFFF`);
+        .setColor(`#FFD700`);
       message.channel.send(Embed);
     }
   },

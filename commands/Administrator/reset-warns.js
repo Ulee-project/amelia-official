@@ -15,21 +15,38 @@ module.exports = {
     
     
     if(!message.member.hasPermission("ADMINISTRATOR")) {
-      return message.channel.send("**❌Yopu should have admin perms to use this command**")
+      return message.channel.send({
+        embed : { 
+        color : `RED`,
+        description : "❌You Don't Have `ADMINISTRATOR` Permission"
+        }
+      })
     }
     
     const user = message.mentions.members.first()
     
     if(!user) {
-    return message.channel.send("**❌Please mention the person whose warning you want to reset**")
+    return message.channel.send({
+      embed :{
+        description : `❌Please mention the person whose warning you want to reset`
+      }
+    })
     }
     
     if(message.mentions.users.first().bot) {
-      return message.channel.send("**❌Bot are not allowed to have warnings**")
+      return message.channel.send({
+        embed : {
+          description : `❌Bot are not allowed to have warnings`
+        }
+      })
     }
     
     if(message.author.id === user.id) {
-      return message.channel.send("**❌You are not allowed to reset your warnings**")
+      return message.channel.send({
+        embed : {
+          description : `❌You are not allowed to reset your warnings`
+        }
+      })
     }
     
     let warnings = db.get(`warnings_${message.guild.id}_${user.id}`)

@@ -16,7 +16,7 @@ module.exports = {
     const kissed = message.author.id === user.id ? "themselfs" : user.username;
 
     const embed = new MessageEmbed()
-      .setColor("#00BFFF")
+      .setColor("#FFD700")
       .setDescription(`${message.author} has Kissed **${kissed}**`)
       .setImage(`${data.url}`)
       .setFooter(`Powered by nekos.life`)
